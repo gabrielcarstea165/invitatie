@@ -3,13 +3,10 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
-
 <title>O întrebare pentru tine</title>
-
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,400;12..96,600;12..96,800&display=swap" rel="stylesheet">
-
 <style>
   :root {
     --bg: #1f1633;
@@ -21,62 +18,53 @@
     --rose-ink: #2a0f1d;
     --honey: #ffc46b;
     --font: "Bricolage Grotesque", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
-
     box-sizing: border-box;
     padding-top: env(safe-area-inset-top, 0px);
     padding-bottom: env(safe-area-inset-bottom, 0px);
   }
-
-  *, *::before, *::after {
-    box-sizing: inherit;
-  }
-
-  html {
-    height: 100%;
-    scroll-padding-top: env(safe-area-inset-top, 0px);
-  }
-
+  *, *::before, *::after { box-sizing: inherit; }
+  html { height: 100%; scroll-padding-top: env(safe-area-inset-top, 0px); }
   body {
     margin: 0;
     min-height: 100%;
     background:
-      radial-gradient(
-        60vmax 60vmax at 85% -10%,
-        rgba(255, 93, 143, .22),
-        transparent 60%
-      ),
-      radial-gradient(
-        50vmax 50vmax at -10% 110%,
-        rgba(255, 196, 107, .14),
-        transparent 60%
-      ),
+      radial-gradient(60vmax 60vmax at 85% -10%, rgba(255, 93, 143, .22), transparent 60%),
+      radial-gradient(50vmax 50vmax at -10% 110%, rgba(255, 196, 107, .14), transparent 60%),
       var(--bg);
-
     color: var(--text);
     font-family: var(--font);
     display: grid;
     place-items: center;
     padding: 24px 20px;
     overflow-x: hidden;
+    position: relative;
   }
 
-  main {
-    width: 100%;
-    max-width: 520px;
-    text-align: center;
+  /* Nume plutitoare pe fundal */
+  .floating-names {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+  .float-item {
+    position: absolute;
+    color: rgba(255, 255, 255, 0.04);
+    font-weight: 800;
+    font-size: clamp(2rem, 6vw, 4rem);
+    white-space: nowrap;
+    animation: floatAnim 15s linear infinite;
+  }
+  @keyframes floatAnim {
+    0% { transform: translateY(105vh) rotate(0deg); }
+    100% { transform: translateY(-15vh) rotate(5deg); }
   }
 
-  .hidden {
-    display: none !important;
-  }
+  main { width: 100%; max-width: 520px; text-align: center; position: relative; z-index: 1; }
+  .hidden { display: none !important; }
 
-  .greet {
-    color: var(--honey);
-    font-weight: 600;
-    font-size: 1.05rem;
-    margin: 0 0 14px;
-  }
-
+  .greet { color: var(--honey); font-weight: 600; font-size: 1.05rem; margin: 0 0 14px; }
   h1 {
     font-size: clamp(2.3rem, 9vw, 3.6rem);
     line-height: 1.02;
@@ -84,1246 +72,349 @@
     font-weight: 800;
     margin: 0 0 16px;
   }
+  .sub { color: var(--muted); font-size: 1.05rem; line-height: 1.5; margin: 0 auto 36px; max-width: 34ch; }
 
-  .sub {
-    color: var(--muted);
-    font-size: 1.05rem;
-    line-height: 1.5;
-    margin: 0 auto 36px;
-    max-width: 34ch;
-  }
-
-  .actions {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 18px;
-    flex-wrap: wrap;
-    min-height: 84px;
-  }
-
+  .actions { display: flex; align-items: center; justify-content: center; gap: 18px; flex-wrap: wrap; min-height: 84px; }
   .btn {
-    font: inherit;
-    font-weight: 700;
-    font-size: 1.15rem;
-    border-radius: 999px;
-    border: 2px solid transparent;
-    padding: 16px 40px;
-    cursor: pointer;
-
-    transition:
-      transform .35s cubic-bezier(.3, 1.4, .5, 1),
-      background .2s,
-      opacity .3s;
+    font: inherit; font-weight: 700; font-size: 1.15rem;
+    border-radius: 999px; border: 2px solid transparent;
+    padding: 16px 40px; cursor: pointer;
+    transition: transform .35s cubic-bezier(.3, 1.4, .5, 1), background .2s, opacity .3s;
   }
+  .btn:focus-visible { outline: 3px solid var(--honey); outline-offset: 3px; }
+  #yes { background: var(--rose); color: var(--rose-ink); transform: scale(var(--s, 1)); }
+  #yes:hover { background: #ff7ba4; }
+  #yes.pulse { animation: pulse 1.6s ease-in-out infinite; }
+  @keyframes pulse { 50% { box-shadow: 0 0 0 14px rgba(255, 93, 143, .0), 0 0 0 0 rgba(255, 93, 143, .5); } 0% { box-shadow: 0 0 0 0 rgba(255, 93, 143, .5); } 100% { box-shadow: 0 0 0 18px rgba(255, 93, 143, 0); } }
 
-  .btn:focus-visible {
-    outline: 3px solid var(--honey);
-    outline-offset: 3px;
-  }
-
-  #yes {
-    background: var(--rose);
-    color: var(--rose-ink);
-    transform: scale(var(--s, 1));
-  }
-
-  #yes:hover {
-    background: #ff7ba4;
-  }
-
-  #yes.pulse {
-    animation: pulse 1.6s ease-in-out infinite;
-  }
-
-  @keyframes pulse {
-    50% {
-      box-shadow:
-        0 0 0 14px rgba(255, 93, 143, .0),
-        0 0 0 0 rgba(255, 93, 143, .5);
-    }
-
-    0% {
-      box-shadow: 0 0 0 0 rgba(255, 93, 143, .5);
-    }
-
-    100% {
-      box-shadow:
-        0 0 0 18px rgba(255, 93, 143, 0);
-    }
-  }
-
-  .no-slot {
-    display: inline-block;
-  }
-
+  .no-slot { display: inline-block; }
   #no {
-    background: transparent;
-    color: var(--muted);
-    border-color: var(--line);
+    background: transparent; color: var(--muted); border-color: var(--line);
     transform: scale(var(--s, 1));
   }
-
   #no.fly {
-    position: fixed;
-    z-index: 20;
-    margin: 0;
-
-    transition:
-      left .28s cubic-bezier(.3, 1.3, .5, 1),
-      top .28s cubic-bezier(.3, 1.3, .5, 1),
-      transform .3s,
-      opacity .4s;
-
+    position: fixed; z-index: 20; margin: 0;
+    transition: left .28s cubic-bezier(.3, 1.3, .5, 1), top .28s cubic-bezier(.3, 1.3, .5, 1), transform .3s, opacity .4s;
     background: var(--bg);
   }
+  #no.gone { opacity: 0; transform: scale(0) !important; pointer-events: none; }
 
-  #no.gone {
-    opacity: 0;
-    transform: scale(0) !important;
-    pointer-events: none;
-  }
+  .whisper { min-height: 1.6em; margin: 22px 0 0; color: var(--muted); font-size: .98rem; }
 
-  .whisper {
-    min-height: 1.6em;
-    margin: 22px 0 0;
-    color: var(--muted);
-    font-size: .98rem;
-  }
-
-  /* PASUL 2 */
-
-  form {
-    text-align: left;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 22px;
-    padding: 26px 22px 24px;
-  }
-
-  .title2 {
-    text-align: center;
-    margin-bottom: 22px;
-  }
-
-  .title2 h2 {
-    font-size: clamp(1.8rem, 7vw, 2.4rem);
-    letter-spacing: -0.02em;
-    margin: 0 0 8px;
-    font-weight: 800;
-  }
-
-  .title2 p {
-    margin: 0;
-    color: var(--muted);
-  }
-
-  fieldset {
-    border: 0;
-    padding: 0;
-    margin: 0 0 20px;
-  }
-
-  legend,
-  label.lbl {
-    display: block;
-    font-weight: 600;
-    margin: 0 0 10px;
-    padding: 0;
-    font-size: 1rem;
-  }
-
-  input[type="date"],
-  input[type="time"],
-  textarea {
-    width: 100%;
-    font: inherit;
-    color: var(--text);
-    background: var(--bg);
-    border: 1.5px solid var(--line);
-    border-radius: 12px;
-    padding: 13px 14px;
+  /* pasul 2 */
+  form { text-align: left; background: var(--surface); border: 1px solid var(--line); border-radius: 22px; padding: 26px 22px 24px; }
+  .title2 { text-align: center; margin-bottom: 22px; }
+  .title2 h2 { font-size: clamp(1.8rem, 7vw, 2.4rem); letter-spacing: -0.02em; margin: 0 0 8px; font-weight: 800; }
+  .title2 p { margin: 0; color: var(--muted); }
+  fieldset { border: 0; padding: 0; margin: 0 0 20px; }
+  legend, label.lbl { display: block; font-weight: 600; margin: 0 0 10px; padding: 0; font-size: 1rem; }
+  input[type="date"], input[type="time"], textarea {
+    width: 100%; font: inherit; color: var(--text);
+    background: var(--bg); border: 1.5px solid var(--line); border-radius: 12px; padding: 13px 14px;
     color-scheme: dark;
   }
-
-  input:focus-visible,
-  textarea:focus-visible {
-    outline: 3px solid var(--honey);
-    outline-offset: 2px;
-    border-color: transparent;
-  }
-
-  textarea {
-    resize: vertical;
-    min-height: 78px;
-  }
-
-  .chips {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 8px;
-  }
-
-  .chips input {
-    position: absolute;
-    opacity: 0;
-    pointer-events: none;
-  }
-
+  input:focus-visible, textarea:focus-visible { outline: 3px solid var(--honey); outline-offset: 2px; border-color: transparent; }
+  textarea { resize: vertical; min-height: 78px; }
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; }
+  .chips input { position: absolute; opacity: 0; pointer-events: none; }
   .chips label {
-    padding: 10px 16px;
-    border-radius: 999px;
-    border: 1.5px solid var(--line);
-    cursor: pointer;
-    user-select: none;
-    font-weight: 500;
-    transition:
-      background .15s,
-      border-color .15s;
+    padding: 10px 16px; border-radius: 999px; border: 1.5px solid var(--line);
+    cursor: pointer; user-select: none; font-weight: 500; transition: background .15s, border-color .15s;
   }
+  .chips input:checked + label { background: var(--honey); color: #2b1c00; border-color: var(--honey); font-weight: 700; }
+  .chips input:focus-visible + label { outline: 3px solid var(--honey); outline-offset: 2px; }
+  .row2 { display: grid; grid-template-columns: 1fr; gap: 20px; }
+  .submit { width: 100%; background: var(--rose); color: var(--rose-ink); margin-top: 6px; }
+  .submit:disabled { opacity: .6; cursor: wait; }
+  .err { color: #ffb3c6; margin: 12px 0 0; font-size: .95rem; text-align: center; }
+  .err a { color: var(--honey); }
 
-  .chips input:checked + label {
-    background: var(--honey);
-    color: #2b1c00;
-    border-color: var(--honey);
-    font-weight: 700;
-  }
+  /* pasul 3 */
+  .done h2 { font-size: clamp(2rem, 8vw, 2.9rem); letter-spacing: -0.03em; font-weight: 800; margin: 0 0 14px; }
+  .done .when { display: inline-block; background: var(--surface); border: 1px solid var(--line); border-radius: 16px; padding: 14px 22px; margin: 6px 0 18px; font-weight: 600; font-size: 1.15rem; line-height: 1.4; }
+  .done p { color: var(--muted); margin: 0 0 8px; }
+  .done a { color: var(--honey); font-weight: 600; }
 
-  .chips input:focus-visible + label {
-    outline: 3px solid var(--honey);
-    outline-offset: 2px;
-  }
-
-  .row2 {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-  }
-
-  .times {
-    margin-top: 10px;
-  }
-
-  .submit {
-    width: 100%;
-    background: var(--rose);
-    color: var(--rose-ink);
-    margin-top: 6px;
-  }
-
-  .submit:disabled {
-    opacity: .6;
-    cursor: wait;
-  }
-
-  .err {
-    color: #ffb3c6;
-    margin: 12px 0 0;
-    font-size: .95rem;
-    text-align: center;
-  }
-
-  /* PASUL 3 */
-
-  .done h2 {
-    font-size: clamp(2rem, 8vw, 2.9rem);
-    letter-spacing: -0.03em;
-    font-weight: 800;
-    margin: 0 0 14px;
-  }
-
-  .done .when {
-    display: inline-block;
-    background: var(--surface);
-    border: 1px solid var(--line);
-    border-radius: 16px;
-    padding: 14px 22px;
-    margin: 6px 0 18px;
-    font-weight: 600;
-    font-size: 1.15rem;
-    line-height: 1.4;
-  }
-
-  .done p {
-    color: var(--muted);
-    margin: 0 0 8px;
-  }
-
-  #confetti {
-    position: fixed;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 50;
-  }
+  #confetti { position: fixed; inset: 0; width: 100%; height: 100%; pointer-events: none; z-index: 50; }
 
   @media (prefers-reduced-motion: reduce) {
-    #yes.pulse {
-      animation: none;
-    }
-
-    .btn,
-    #no.fly {
-      transition: none;
-    }
+    #yes.pulse { animation: none; }
+    .btn, #no.fly { transition: none; }
+    .float-item { animation: none; }
   }
 </style>
 </head>
-
 <body>
+<div class="floating-names" aria-hidden="true">
+  <span class="float-item" style="left: 10%; animation-duration: 14s; animation-delay: 0s;">Cristina</span>
+  <span class="float-item" style="left: 75%; animation-duration: 18s; animation-delay: 2s;">Kasandra</span>
+  <span class="float-item" style="left: 40%; animation-duration: 16s; animation-delay: 5s;">Cristina</span>
+  <span class="float-item" style="left: 85%; animation-duration: 12s; animation-delay: 1s;">Kasandra</span>
+  <span class="float-item" style="left: 25%; animation-duration: 20s; animation-delay: 7s;">Kasandra</span>
+  <span class="float-item" style="left: 60%; animation-duration: 15s; animation-delay: 3s;">Cristina</span>
+</div>
 
 <canvas id="confetti" aria-hidden="true"></canvas>
 
 <main>
-
-  <!-- PASUL 1 -->
+  <!-- PASUL 1: întrebarea -->
   <section id="step1">
-
     <p class="greet" id="greet"></p>
-
     <h1>Vrei să ieșim în oraș?</h1>
-
-    <p class="sub">
-      O cafea, o plimbare sau ce alegi tu.
-      Tu decizi cum și când.
-    </p>
+    <p class="sub">O cafea, o plimbare sau ce alegi tu. Tu decizi cum și când.</p>
 
     <div class="actions">
-
-      <button class="btn pulse" id="yes" type="button">
-        Da
-      </button>
-
-      <span class="no-slot" id="noSlot">
-        <button class="btn" id="no" type="button">
-          Nu
-        </button>
-      </span>
-
+      <button class="btn pulse" id="yes" type="button">Da</button>
+      <span class="no-slot" id="noSlot"><button class="btn" id="no" type="button">Nu</button></span>
     </div>
-
     <p class="whisper" id="whisper" aria-live="polite"></p>
-
   </section>
 
-
-  <!-- PASUL 2 -->
+  <!-- PASUL 2: data, ora, activitatea -->
   <section id="step2" class="hidden">
-
     <form id="form" novalidate>
-
       <div class="title2">
-
         <h2>Super! Alege tu.</h2>
-
-        <p>
-          Spune-mi când și cum îți convine.
-        </p>
-
+        <p>Spune-mi când și cum îți convine.</p>
       </div>
-
 
       <div class="row2">
-
         <div>
-
-          <label class="lbl" for="date">
-            În ce zi?
-          </label>
-
-          <input
-            type="date"
-            id="date"
-            name="data"
-            required
-          >
-
+          <label class="lbl" for="date">În ce zi?</label>
+          <input type="date" id="date" name="data" required>
         </div>
-
-
         <div>
-
-          <label class="lbl" for="time">
-            La ce oră?
-          </label>
-
-          <input
-            type="time"
-            id="time"
-            name="ora"
-            value="19:00"
-            required
-          >
-
-          <div
-            class="chips times"
-            id="timeChips"
-            role="group"
-            aria-label="Ore rapide"
-          ></div>
-
+          <label class="lbl" for="time">La ce oră?</label>
+          <input type="time" id="time" name="ora" value="19:00" required>
         </div>
-
       </div>
-
 
       <fieldset style="margin-top:20px">
-
-        <legend>
-          Ce facem?
-        </legend>
-
-        <div
-          class="chips"
-          id="actChips"
-        ></div>
-
+        <legend>Ce facem?</legend>
+        <div class="chips" id="actChips"></div>
       </fieldset>
 
-
       <div style="margin-bottom:20px">
-
-        <label
-          class="lbl"
-          for="note"
-        >
-          Vrei să-mi spui ceva? (opțional)
-        </label>
-
-        <textarea
-          id="note"
-          name="mesaj"
-          placeholder="Un loc anume, o idee, o condiție…"
-        ></textarea>
-
+        <label class="lbl" for="note">Vrei să-mi spui ceva? (opțional)</label>
+        <textarea id="note" name="mesaj" placeholder="Un loc anume, o idee, o condiție…"></textarea>
       </div>
 
-
-      <button
-        class="btn submit"
-        id="send"
-        type="submit"
-      >
-        Confirmă
-      </button>
-
-
-      <p
-        class="err hidden"
-        id="err"
-        role="alert"
-      ></p>
-
+      <button class="btn submit" id="send" type="submit">Confirmă</button>
+      <p class="err hidden" id="err" role="alert"></p>
     </form>
-
   </section>
 
-
-  <!-- PASUL 3 -->
-  <section
-    id="step3"
-    class="done hidden"
-    aria-live="polite"
-  >
-
-    <h2>
-      Perfect! 🎉
-    </h2>
-
-    <div
-      class="when"
-      id="summary"
-    ></div>
-
-    <p>
-      Am primit răspunsul tău.
-      Te anunț eu cu detaliile.
-    </p>
-
+  <!-- PASUL 3: confirmare -->
+  <section id="step3" class="done hidden" aria-live="polite">
+    <h2>Perfect! 🎉</h2>
+    <div class="when" id="summary"></div>
+    <p>Am primit răspunsul tău. Te anunț eu cu detaliile.</p>
+    <p id="waWrap" class="hidden"><a id="waLink" href="#" target="_blank" rel="noopener">Vrei să-mi scrii și pe WhatsApp?</a></p>
   </section>
-
 </main>
 
-
 <script>
-
-/* =====================================================
-   CONFIGURARE
-   ===================================================== */
-
+/* ============ SETĂRI ============ */
 const CONFIG = {
-
-  herName: "Cristina",
-
-  myName: "Gabriel",
-
-  /*
-    AICI primești răspunsurile.
-    Dacă acesta este emailul tău, îl poți lăsa.
-  */
-  email: "gabriel.carstea165@gmail.com",
-
-  activities: [
-    "Cafea",
-    "Plimbare",
-    "Cină",
-    "Surprinde-mă"
-  ],
-
-  timeSlots: [
-    "17:00",
-    "18:00",
-    "19:00",
-    "20:00",
-    "21:00"
-  ],
-
-  dodgesBeforeGone: 6
-
+  herName: "Cristina",               
+  myName:  "Gabriel",                
+  email:   "gabriel.carstea165@gmail.com",  
+  whatsapp: "",                      
+  activities: ["Cafea", "Plimbare", "Cină", "Surprinde-mă"], // Fără "Film"
+  dodgesBeforeGone: 6                
 };
-
-
-/* =====================================================
-   FUNCȚII GENERALE
-   ===================================================== */
+/* ================================== */
 
 const $ = (id) => document.getElementById(id);
+const reduced = matchMedia("(prefers-reduced-motion: reduce)").matches;
 
-const reduced =
-  matchMedia("(prefers-reduced-motion: reduce)").matches;
+CONFIG.whatsapp = String(CONFIG.whatsapp || "").replace(/\D/g, "");
+if (CONFIG.herName) $("greet").textContent = "Hei, " + CONFIG.herName + "!";
+else $("greet").classList.add("hidden");
 
-
-/* =====================================================
-   SALUT
-   ===================================================== */
-
-if (CONFIG.herName) {
-
-  $("greet").textContent =
-    "Hei, " + CONFIG.herName + "!";
-
-} else {
-
-  $("greet").classList.add("hidden");
-
-}
-
-
-/* =====================================================
-   BUTONUL "NU"
-   ===================================================== */
-
-const yes = $("yes");
-const no = $("no");
-const slot = $("noSlot");
-const whisper = $("whisper");
-
-let dodges = 0;
-let gone = false;
-let lastDodge = 0;
+/* ---------- butonul „Nu” care fuge ---------- */
+const yes = $("yes"), no = $("no"), slot = $("noSlot"), whisper = $("whisper");
+let dodges = 0, gone = false, lastDodge = 0;
 
 const teases = [
-
   "Hopa, a alunecat 😅",
-
   "Ești aproape, dar nu chiar.",
-
   "Se pare că nu vrea să fie apăsat.",
-
   "Mai încearcă… 😏",
-
   "Ultima șansă, nu mai rezistă."
-
 ];
 
-
 function dodge(ev) {
-
   if (gone) return;
-
-  if (ev && ev.cancelable) {
-    ev.preventDefault();
-  }
-
+  if (ev && ev.cancelable) ev.preventDefault();
   const now = Date.now();
-
-  if (now - lastDodge < 300) {
-    return;
-  }
-
+  if (now - lastDodge < 300) return;
   lastDodge = now;
-
   dodges++;
 
-  if (dodges >= CONFIG.dodgesBeforeGone) {
-    vanish();
-    return;
-  }
-
+  if (dodges >= CONFIG.dodgesBeforeGone) return vanish();
 
   if (!no.classList.contains("fly")) {
-
     const r = no.getBoundingClientRect();
-
     slot.style.width = r.width + "px";
     slot.style.height = r.height + "px";
-
     no.style.left = r.left + "px";
     no.style.top = r.top + "px";
-
     no.classList.add("fly");
-
     void no.offsetWidth;
-
   }
 
-
-  const w = no.offsetWidth;
-  const h = no.offsetHeight;
-  const pad = 14;
-
-  const maxX =
-    Math.max(pad, innerWidth - w - pad);
-
-  const maxY =
-    Math.max(pad, innerHeight - h - pad);
-
-  const yr =
-    yes.getBoundingClientRect();
-
-  const cur =
-    no.getBoundingClientRect();
-
-  let x = pad;
-  let y = pad;
-
-
+  const w = no.offsetWidth, h = no.offsetHeight, pad = 14;
+  const maxX = Math.max(pad, innerWidth - w - pad);
+  const maxY = Math.max(pad, innerHeight - h - pad);
+  const yr = yes.getBoundingClientRect();
+  const cur = no.getBoundingClientRect();
+  let x = pad, y = pad;
   for (let i = 0; i < 40; i++) {
-
-    x =
-      pad + Math.random() * (maxX - pad);
-
-    y =
-      pad + Math.random() * (maxY - pad);
-
-
-    const overlapsYes =
-      x < yr.right + 24 &&
-      x + w > yr.left - 24 &&
-      y < yr.bottom + 24 &&
-      y + h > yr.top - 24;
-
-
-    const tooClose =
-      Math.hypot(
-        x - cur.left,
-        y - cur.top
-      ) < 140;
-
-
-    if (!overlapsYes && !tooClose) {
-      break;
-    }
-
+    x = pad + Math.random() * (maxX - pad);
+    y = pad + Math.random() * (maxY - pad);
+    const overlapsYes = x < yr.right + 24 && x + w > yr.left - 24 && y < yr.bottom + 24 && y + h > yr.top - 24;
+    const tooClose = Math.hypot(x - cur.left, y - cur.top) < 140;
+    if (!overlapsYes && !tooClose) break;
   }
-
-
   no.style.left = x + "px";
   no.style.top = y + "px";
 
-
-  no.style.setProperty(
-    "--s",
-    Math.max(
-      0.55,
-      1 - dodges * 0.08
-    )
-  );
-
-
-  yes.style.setProperty(
-    "--s",
-    1 + dodges * 0.06
-  );
-
-
-  whisper.textContent =
-    teases[
-      Math.min(
-        dodges - 1,
-        teases.length - 1
-      )
-    ];
-
+  no.style.setProperty("--s", Math.max(0.55, 1 - dodges * 0.08));
+  yes.style.setProperty("--s", 1 + dodges * 0.06);
+  whisper.textContent = teases[Math.min(dodges - 1, teases.length - 1)];
 }
-
 
 function vanish() {
-
   gone = true;
-
   no.classList.add("gone");
-
-  setTimeout(() => {
-
-    no.style.display = "none";
-    slot.style.display = "none";
-
-  }, 400);
-
-
-  yes.style.setProperty(
-    "--s",
-    1.25
-  );
-
-
-  whisper.textContent =
-    "Butonul „Nu” a plecat. Mai ai o singură variantă 😄";
-
+  setTimeout(() => { no.style.display = "none"; slot.style.display = "none"; }, 400);
+  yes.style.setProperty("--s", 1.25);
+  whisper.textContent = "Butonul „Nu” a plecat. Mai ai o singură variantă 😄";
 }
 
-
-[
-  "pointerenter",
-  "pointerdown",
-  "click",
-  "focus",
-  "touchstart"
-].forEach((eventName) => {
-
-  no.addEventListener(
-    eventName,
-    dodge,
-    { passive: false }
-  );
-
-});
-
-
-/* =====================================================
-   PASUL 2
-   ===================================================== */
-
-yes.addEventListener("click", () => {
-
-  $("step1").classList.add("hidden");
-
-  $("step2").classList.remove("hidden");
-
-  scrollTo(0, 0);
-
-  burst();
-
-});
-
-
-/* =====================================================
-   DATA MINIMĂ
-   ===================================================== */
-
-const today = new Date();
-
-const iso = (x) => {
-
-  return (
-    x.getFullYear() +
-    "-" +
-    String(
-      x.getMonth() + 1
-    ).padStart(2, "0") +
-    "-" +
-    String(
-      x.getDate()
-    ).padStart(2, "0")
-  );
-
-};
-
-$("date").min = iso(today);
-
-
-/* =====================================================
-   ORE RAPIDE
-   ===================================================== */
-
-CONFIG.timeSlots.forEach((time) => {
-
-  const button =
-    document.createElement("button");
-
-  button.type = "button";
-
-  button.textContent = time;
-
-  button.className = "btn";
-
-  button.style.cssText =
-    "padding:8px 14px;" +
-    "font-size:.95rem;" +
-    "font-weight:500;" +
-    "background:transparent;" +
-    "color:var(--text);" +
-    "border-color:var(--line)";
-
-
-  button.addEventListener(
-    "click",
-    () => {
-
-      $("time").value = time;
-
-    }
-  );
-
-
-  $("timeChips").appendChild(button);
-
-});
-
-
-/* =====================================================
-   ACTIVITĂȚI
-   ===================================================== */
-
-CONFIG.activities.forEach((activity, index) => {
-
-  const id =
-    "act" + index;
-
-
-  const input =
-    document.createElement("input");
-
-  input.type = "radio";
-  input.name = "activitate";
-  input.id = id;
-  input.value = activity;
-
-
-  if (index === 0) {
-    input.checked = true;
-  }
-
-
-  const label =
-    document.createElement("label");
-
-  label.htmlFor = id;
-  label.textContent = activity;
-
-
-  $("actChips").append(
-    input,
-    label
-  );
-
-});
-
-
-/* =====================================================
-   DATA FRUMOS FORMATATĂ
-   ===================================================== */
-
-function prettyDate(value) {
-
-  const [
-    year,
-    month,
-    day
-  ] =
-    value
-      .split("-")
-      .map(Number);
-
-
-  return new Date(
-    year,
-    month - 1,
-    day
-  ).toLocaleDateString(
-    "ro-RO",
-    {
-      weekday: "long",
-      day: "numeric",
-      month: "long"
-    }
-  );
-
-}
-
-
-/* =====================================================
-   TRIMITERE EMAIL
-   ===================================================== */
-
-$("form").addEventListener(
-  "submit",
-  async (event) => {
-
-    event.preventDefault();
-
-
-    const error =
-      $("err");
-
-    error.classList.add(
-      "hidden"
-    );
-
-
-    const data =
-      $("date").value;
-
-    const ora =
-      $("time").value;
-
-    const activity =
-      document.querySelector(
-        'input[name="activitate"]:checked'
-      )?.value || "";
-
-    const note =
-      $("note").value.trim();
-
-
-    /* verificare */
-
-    if (!data || !ora) {
-
-      error.textContent =
-        "Alege ziua și ora ca să pot confirma.";
-
-      error.classList.remove(
-        "hidden"
-      );
-
-      return;
-
-    }
-
-
-    const zi =
-      prettyDate(data);
-
-
-    const button =
-      $("send");
-
-    button.disabled = true;
-
-    button.textContent =
-      "Se trimite…";
-
-
-    try {
-
-      /*
-        Trimitem direct către FormSubmit.
-
-        FormSubmit va trimite datele
-        către emailul din CONFIG.email.
-      */
-
-      const response =
-        await fetch(
-          "https://formsubmit.co/ajax/" +
-          encodeURIComponent(
-            CONFIG.email
-          ),
-          {
-            method: "POST",
-
-            headers: {
-              "Content-Type":
-                "application/json",
-
-              "Accept":
-                "application/json"
-            },
-
-            body: JSON.stringify({
-
-              _subject:
-                "💌 Răspuns la invitație",
-
-              _template:
-                "table",
-
-              _captcha:
-                "false",
-
-              _url:
-                window.location.href,
-
-              Raspuns:
-                "DA 🎉",
-
-              Nume:
-                CONFIG.herName ||
-                "Cristina",
-
-              Ziua:
-                zi,
-
-              Ora:
-                ora,
-
-              Activitate:
-                activity,
-
-              Mesaj:
-                note || "-"
-
-            })
-          }
-        );
-
-
-      /*
-        Încercăm să citim răspunsul
-        FormSubmit.
-      */
-
-      const result =
-        await response
-          .json()
-          .catch(() => null);
-
-
-      console.log(
-        "Răspuns FormSubmit:",
-        result
-      );
-
-
-      const success =
-        response.ok &&
-        (
-          result?.success === true ||
-          result?.success === "true"
-        );
-
-
-      if (!success) {
-
-        throw new Error(
-          result?.message ||
-          "FormSubmit nu a acceptat trimiterea."
-        );
-
-      }
-
-
-      /* =================================================
-         SUCCES
-         ================================================= */
-
-      $("summary").innerHTML =
-
-        zi.charAt(0).toUpperCase() +
-        zi.slice(1) +
-
-        "<br>la " +
-        ora +
-
-        " · " +
-        activity;
-
-
-      $("step2").classList.add(
-        "hidden"
-      );
-
-      $("step3").classList.remove(
-        "hidden"
-      );
-
-
-      scrollTo(0, 0);
-
-      burst();
-
-
-    } catch (errorObject) {
-
-      console.error(
-        "Eroare FormSubmit:",
-        errorObject
-      );
-
-
-      button.disabled = false;
-
-      button.textContent =
-        "Confirmă";
-
-
-      error.textContent =
-        "Nu s-a putut trimite răspunsul. " +
-        "Încearcă din nou în câteva secunde.";
-
-
-      error.classList.remove(
-        "hidden"
-      );
-
-    }
-
-  }
+["pointerenter", "pointerdown", "click", "focus", "touchstart"].forEach((t) =>
+  no.addEventListener(t, dodge, { passive: false })
 );
 
+/* ---------- pasul 2 ---------- */
+yes.addEventListener("click", () => {
+  $("step1").classList.add("hidden");
+  $("step2").classList.remove("hidden");
+  scrollTo(0, 0);
+  burst();
+});
 
-/* =====================================================
-   CONFETTI
-   ===================================================== */
+const d = new Date();
+const iso = (x) => x.getFullYear() + "-" + String(x.getMonth() + 1).padStart(2, "0") + "-" + String(x.getDate()).padStart(2, "0");
+$("date").min = iso(d);
 
-function burst() {
+// activități (radio)
+CONFIG.activities.forEach((a, i) => {
+  const id = "act" + i;
+  const inp = document.createElement("input");
+  inp.type = "radio"; inp.name = "activitate"; inp.id = id; inp.value = a;
+  if (i === 0) inp.checked = true;
+  const lab = document.createElement("label");
+  lab.htmlFor = id; lab.textContent = a;
+  $("actChips").append(inp, lab);
+});
 
-  if (reduced) {
+/* ---------- trimitere ---------- */
+function prettyDate(v) {
+  const [y, m, dd] = v.split("-").map(Number);
+  return new Date(y, m - 1, dd).toLocaleDateString("ro-RO", { weekday: "long", day: "numeric", month: "long" });
+}
+
+$("form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const err = $("err");
+  err.classList.add("hidden");
+
+  const data = $("date").value, ora = $("time").value;
+  const act = document.querySelector('input[name="activitate"]:checked')?.value || "";
+  const note = $("note").value.trim();
+
+  if (!data || !ora) {
+    err.textContent = "Alege ziua și ora ca să pot confirma.";
+    err.classList.remove("hidden");
     return;
   }
 
+  const zi = prettyDate(data);
+  const text = "Am spus DA! 🎉 " + zi + ", la " + ora + " — " + act + (note ? ". Mesaj: " + note : "");
+  const btn = $("send");
+  btn.disabled = true; btn.textContent = "Se trimite…";
 
-  const canvas =
-    $("confetti");
-
-  const ctx =
-    canvas.getContext("2d");
-
-
-  canvas.width =
-    innerWidth;
-
-  canvas.height =
-    innerHeight;
-
-
-  const colors = [
-
-    "#ff5d8f",
-    "#ffc46b",
-    "#fbf1ec",
-    "#b9a9d6"
-
-  ];
-
-
-  const particles =
-    Array.from(
-      { length: 110 },
-      () => ({
-
-        x:
-          innerWidth / 2,
-
-        y:
-          innerHeight * 0.55,
-
-        vx:
-          (Math.random() - 0.5) * 16,
-
-        vy:
-          -Math.random() * 15 - 4,
-
-        s:
-          5 + Math.random() * 6,
-
-        r:
-          Math.random() * 6,
-
-        vr:
-          (Math.random() - 0.5) * 0.4,
-
-        c:
-          colors[
-            (Math.random() *
-              colors.length) | 0
-          ]
-
-      })
-    );
-
-
-  let frame = 0;
-
-
-  (function tick() {
-
-    ctx.clearRect(
-      0,
-      0,
-      canvas.width,
-      canvas.height
-    );
-
-
-    particles.forEach(
-      (particle) => {
-
-        particle.vy += 0.42;
-
-        particle.x +=
-          particle.vx;
-
-        particle.y +=
-          particle.vy;
-
-        particle.r +=
-          particle.vr;
-
-
-        ctx.save();
-
-        ctx.translate(
-          particle.x,
-          particle.y
-        );
-
-        ctx.rotate(
-          particle.r
-        );
-
-        ctx.fillStyle =
-          particle.c;
-
-        ctx.fillRect(
-          -particle.s / 2,
-          -particle.s / 3,
-          particle.s,
-          particle.s * 0.6
-        );
-
-        ctx.restore();
-
-      }
-    );
-
-
-    if (++frame < 140) {
-
-      requestAnimationFrame(
-        tick
-      );
-
-    } else {
-
-      ctx.clearRect(
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
-
+  const demo = CONFIG.email.startsWith("EMAILUL_TAU");
+  let ok = false;
+  let why = "";
+  try {
+    if (demo) { ok = true; }
+    else {
+      const res = await fetch("https://formsubmit.co/ajax/" + encodeURIComponent(CONFIG.email), {
+        method: "POST",
+        headers: { "Content-Type": "application/json", "Accept": "application/json" },
+        body: JSON.stringify({
+          _subject: "Răspuns la invitație: DA 🎉",
+          _captcha: "false",
+          _template: "table",
+          Raspuns: "DA",
+          Ziua: zi,
+          Ora: ora,
+          Activitate: act,
+          Mesaj: note || "-"
+        })
+      });
+      const j = await res.json().catch(() => ({}));
+      ok = res.ok && (j.success === true || j.success === "true");
+      if (!ok) why = j.message || ("eroare " + res.status);
     }
+  } catch (_) { ok = false; why = "cererea a fost blocată (ad-block, VPN sau rețea)"; }
 
+  if (!ok) {
+    btn.disabled = false; btn.textContent = "Confirmă";
+    const wa = CONFIG.whatsapp ? "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(text) : "";
+    err.innerHTML = "Nu s-a trimis automat" + (why ? " (" + String(why).replace(/[<>&]/g, "") + ")" : "") + ". " +
+      (wa ? '<a href="' + wa + '" target="_blank" rel="noopener">Trimite-mi pe WhatsApp</a> sau apasă din nou Confirmă.' : "Mai apasă o dată Confirmă.");
+    err.classList.remove("hidden");
+    return;
+  }
+
+  $("summary").innerHTML = zi.charAt(0).toUpperCase() + zi.slice(1) + "<br>la " + ora + " · " + act;
+  if (CONFIG.whatsapp) {
+    $("waLink").href = "https://wa.me/" + CONFIG.whatsapp + "?text=" + encodeURIComponent(text);
+    $("waWrap").classList.remove("hidden");
+  }
+  $("step2").classList.add("hidden");
+  $("step3").classList.remove("hidden");
+  scrollTo(0, 0);
+  burst();
+});
+
+/* ---------- confetti ---------- */
+function burst() {
+  if (reduced) return;
+  const c = $("confetti"), ctx = c.getContext("2d");
+  c.width = innerWidth; c.height = innerHeight;
+  const colors = ["#ff5d8f", "#ffc46b", "#fbf1ec", "#b9a9d6"];
+  const ps = Array.from({ length: 110 }, () => ({
+    x: innerWidth / 2, y: innerHeight * 0.55,
+    vx: (Math.random() - 0.5) * 16, vy: -Math.random() * 15 - 4,
+    s: 5 + Math.random() * 6, r: Math.random() * 6, vr: (Math.random() - 0.5) * 0.4,
+    c: colors[(Math.random() * colors.length) | 0]
+  }));
+  let f = 0;
+  (function tick() {
+    ctx.clearRect(0, 0, c.width, c.height);
+    ps.forEach((p) => {
+      p.vy += 0.42; p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      ctx.save(); ctx.translate(p.x, p.y); ctx.rotate(p.r);
+      ctx.fillStyle = p.c; ctx.fillRect(-p.s / 2, -p.s / 3, p.s, p.s * 0.6); ctx.restore();
+    });
+    if (++f < 140) requestAnimationFrame(tick); else ctx.clearRect(0, 0, c.width, c.height);
   })();
-
 }
-
 </script>
-
 </body>
 </html>
-```
